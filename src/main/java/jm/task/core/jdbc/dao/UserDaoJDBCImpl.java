@@ -17,22 +17,22 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void createUsersTable() throws SQLException {
         try (Statement statement = Util.getConnection().get().createStatement()) {
-            statement.execute("CREATE TABLE mydbtest.userr (id INT PRIMARY KEY AUTO_INCREMENT," +
+            statement.execute("CREATE TABLE IF NOT EXISTS mydbtest.userr (id INT PRIMARY KEY AUTO_INCREMENT," +
                     "name VARCHAR(40)," +
                     "lastName VARCHAR(40)," +
                     "age INT)");
         } catch (SQLException e) {
         System.out.println(e.getMessage());
-        System.out.println("Таблица существует. Статус ошибки - " + e.getSQLState());
+        System.out.println("Статус ошибки - " + e.getSQLState());
     }
     }
 
     public void dropUsersTable() {
         try (Statement statement = Util.getConnection().get().createStatement()) {
-            statement.execute("DROP TABLE mydbtest.userr;");
+            statement.execute("DROP TABLE IF EXISTS mydbtest.userr;");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            System.out.println("Таблицы не существует. Статус ошибки - " + e.getSQLState());
+            System.out.println("Статус ошибки - " + e.getSQLState());
         }
     }
 
