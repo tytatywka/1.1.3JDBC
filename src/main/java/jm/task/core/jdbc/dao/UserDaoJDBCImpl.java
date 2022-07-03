@@ -21,7 +21,10 @@ public class UserDaoJDBCImpl implements UserDao {
                     "name VARCHAR(40)," +
                     "lastName VARCHAR(40)," +
                     "age INT)");
-        }
+        } catch (SQLException e) {
+        System.out.println(e.getMessage());
+        System.out.println("Таблица существует. Статус ошибки - " + e.getSQLState());
+    }
     }
 
     public void dropUsersTable() {
@@ -29,7 +32,7 @@ public class UserDaoJDBCImpl implements UserDao {
             statement.execute("DROP TABLE mydbtest.userr;");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            System.out.println("Статус ошибки - " + e.getSQLState());
+            System.out.println("Таблицы не существует. Статус ошибки - " + e.getSQLState());
         }
     }
 
@@ -52,6 +55,7 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void removeUserById(long id) {
         Optional<Connection> connection = Util.getConnection();
+
         if (connection.isPresent()) {
             String query = "DELETE FROM mydbtest.userr WHERE id = ?";
             try (PreparedStatement preparedStatement = connection.get().prepareStatement(query)) {
@@ -66,8 +70,9 @@ public class UserDaoJDBCImpl implements UserDao {
     }
         public List<User> getAllUsers() {
             List<User> list = new ArrayList<>();
-            try (Statement statement = Util.getConnection().get().createStatement()) {
-                ResultSet resultSet = statement.executeQuery("SELECT * FROM mydbtest.userr;");
+            Optional<Connection> connection = Util.getConnection();
+            try (PreparedStatement preparedStatement = connection.get().prepareStatement("SELECT * FROM mydbtest.userr;")) {
+                ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
                     User user = new User();
                     user.setId(resultSet.getLong(1));
