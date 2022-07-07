@@ -16,10 +16,8 @@ import java.util.List;
 import static jm.task.core.jdbc.util.Util.getSessionFactory;
 
 public class UserDaoHibernateImpl implements UserDao {
-    private final Util util;
     private Transaction transaction = null;
     public UserDaoHibernateImpl() {
-        this.util = new Util();
     }
 
     @Override
